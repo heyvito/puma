@@ -39,6 +39,7 @@ typedef struct puma_parser {
 
   VALUE request;
   VALUE body;
+  VALUE verbatim_headers_key;
 
   field_cb http_field;
   element_cb request_method;

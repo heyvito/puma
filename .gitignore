@@ -27,3 +27,4 @@ vendor/
 *.gem
 /lib/puma/puma_http11.rb
 /lib/puma/puma_http11.su
+cmake-build-debug/

@@ -194,6 +194,19 @@ void http_field(puma_parser* hp, const char *field, size_t flen,
       rb_str_cat2(v, ", ");
       rb_str_cat(v, value, vlen);
   }
+
+  VALUE verbatim = rb_hash_aref(hp->request, hp->verbatim_headers_key);
+
+  if (verbatim == Qnil) {
+      verbatim = rb_hash_new();
+  }
+
+  VALUE headerValue = rb_hash_aref(verbatim, f);
+  if (headerValue == Qnil) {
+      headerValue = rb_ary_new();
+  }
+  rb_ary_push(headerValue, rb_str_new(value, vlen));
+  rb_hash_aset(hp->request, hp->verbatim_headers_key, headerValue);
 }
 
 void request_method(puma_parser* hp, const char *at, size_t length)

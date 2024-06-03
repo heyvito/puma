@@ -95,6 +95,7 @@ int puma_parser_init(puma_parser *parser)  {
   parser->field_start = 0;
   parser->request = Qnil;
   parser->body = Qnil;
+  parser->verbatim_headers_key = rb_str_new_cstr("puma.verbatim_headers");
 
   return 1;
 }

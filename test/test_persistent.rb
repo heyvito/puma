@@ -19,7 +19,7 @@ class TestPersistent < Minitest::Test
 
     @simple = lambda do |env|
       @inputs << env['rack.input']
-      status = Integer(env['HTTP_X_STATUS'] || 200)
+      status = Integer(env['HTTP_X_STATUS']&.first || 200)
       [status, @headers, @body]
     end
 

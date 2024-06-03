@@ -269,7 +269,7 @@ class TestPumaServer < Minitest::Test
   def test_respect_x_forwarded_proto
     env = {}
     env['HOST'] = "example.com"
-    env['HTTP_X_FORWARDED_PROTO'] = "https,http"
+    env['HTTP_X_FORWARDED_PROTO'] = ["https,http"]
 
     assert_equal "443", @server.default_server_port(env)
   end
@@ -277,7 +277,7 @@ class TestPumaServer < Minitest::Test
   def test_respect_x_forwarded_ssl_on
     env = {}
     env['HOST'] = 'example.com'
-    env['HTTP_X_FORWARDED_SSL'] = 'on'
+    env['HTTP_X_FORWARDED_SSL'] = ['on']
 
     assert_equal "443", @server.default_server_port(env)
   end
@@ -285,7 +285,7 @@ class TestPumaServer < Minitest::Test
   def test_respect_x_forwarded_scheme
     env = {}
     env['HOST'] = 'example.com'
-    env['HTTP_X_FORWARDED_SCHEME'] = 'https'
+    env['HTTP_X_FORWARDED_SCHEME'] = ['https']
 
     assert_equal '443', @server.default_server_port(env)
   end

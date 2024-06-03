@@ -227,7 +227,7 @@ module Puma
     end
 
     def try_to_finish
-      if env[CONTENT_LENGTH] && above_http_content_limit(env[CONTENT_LENGTH].to_i)
+      if env[CONTENT_LENGTH] && env[CONTENT_LENGTH]&.length > 0 && above_http_content_limit(env[CONTENT_LENGTH].first.to_i)
         @http_content_length_limit_exceeded = true
       end
 
@@ -308,7 +308,7 @@ module Puma
       return @peerip if @peerip
 
       if @remote_addr_header
-        hdr = (@env[@remote_addr_header] || @io.peeraddr.last).split(/[\s,]/).first
+        hdr = (@env.fetch(@remote_addr_header, []).first || @io.peeraddr.last).split(/[\s,]/).first
         @peerip = hdr
         return hdr
       end
@@ -351,7 +351,7 @@ module Puma
     def setup_body
       @body_read_start = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
 
-      if @env[HTTP_EXPECT] == CONTINUE
+      if @env[HTTP_EXPECT]&.first == CONTINUE
         # TODO allow a hook here to check the headers before
         # going forward
         @io << HTTP_11_100
@@ -364,6 +364,7 @@ module Puma
 
       te = @env[TRANSFER_ENCODING2]
       if te
+        te = te.join(', ')
         te_lwr = te.downcase
         if te.include? ','
           te_ary = te_lwr.split ','
@@ -393,7 +394,7 @@ module Puma
 
       if cl
         # cannot contain characters that are not \d, or be empty
-        if CONTENT_LENGTH_VALUE_INVALID.match?(cl) || cl.empty?
+        if (cl != nil && cl.length > 1) || CONTENT_LENGTH_VALUE_INVALID.match?(cl&.first) || cl&.first&.empty?
           raise HttpParserError, "Invalid Content-Length: #{cl.inspect}"
         end
       else
@@ -403,7 +404,7 @@ module Puma
         return true
       end
 
-      content_length = cl.to_i
+      content_length = cl.first.to_i
 
       remain = content_length - body.bytesize
 

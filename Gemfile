@@ -39,3 +39,5 @@ end
 
 gem 'm'
 gem "localhost", require: false
+
+gem "debug", "~> 1.9"

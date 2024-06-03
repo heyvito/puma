@@ -266,7 +266,7 @@ module Puma
     # @return [Puma::Const::PORT_443,Puma::Const::PORT_80]
     #
     def default_server_port(env)
-      if ['on', HTTPS].include?(env[HTTPS_KEY]) || env[HTTP_X_FORWARDED_PROTO].to_s[0...5] == HTTPS || env[HTTP_X_FORWARDED_SCHEME] == HTTPS || env[HTTP_X_FORWARDED_SSL] == "on"
+      if ['on', HTTPS].include?(env[HTTPS_KEY]) || env[HTTP_X_FORWARDED_PROTO]&.first.to_s[0...5] == HTTPS || env[HTTP_X_FORWARDED_SCHEME]&.first == HTTPS || env[HTTP_X_FORWARDED_SSL]&.first == "on"
         PORT_443
       else
         PORT_80
@@ -579,7 +579,7 @@ module Puma
       http_11 = env[SERVER_PROTOCOL] == HTTP_11
       if http_11
         resp_info[:allow_chunked] = true
-        resp_info[:keep_alive] = env.fetch(HTTP_CONNECTION, "").downcase != CLOSE
+        resp_info[:keep_alive] = env.fetch(HTTP_CONNECTION, [""]).first != CLOSE
 
         # An optimization. The most common response is 200, so we can
         # reply with the proper 200 status without having to compute
@@ -594,7 +594,7 @@ module Puma
         end
       else
         resp_info[:allow_chunked] = false
-        resp_info[:keep_alive] = env.fetch(HTTP_CONNECTION, "").downcase == KEEP_ALIVE
+        resp_info[:keep_alive] = env.fetch(HTTP_CONNECTION, [""]).first.downcase == KEEP_ALIVE
 
         # Same optimization as above for HTTP/1.1
         #

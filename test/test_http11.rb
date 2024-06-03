@@ -205,7 +205,7 @@ class Http11ParserTest < Minitest::Test
 
     parser.execute(req, http, 0)
 
-    assert_equal "Strip This", req["HTTP_X_STRIP_ME"]
+    assert_equal "Strip This", req["HTTP_X_STRIP_ME"].first
   end
 
   def test_newline_smuggler
@@ -235,6 +235,6 @@ class Http11ParserTest < Minitest::Test
 
     parser.execute(req, http, 0)
 
-    assert_equal "Valid\tValue", req['HTTP_DUMMY']
+    assert_equal "Valid\tValue", req['HTTP_DUMMY'].first
   end
 end

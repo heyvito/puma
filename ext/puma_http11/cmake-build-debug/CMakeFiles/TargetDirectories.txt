@@ -1,0 +1,3 @@
+/Users/vitosartori/Developer/puma/ext/puma_http11/cmake-build-debug/CMakeFiles/puma_http11.dir
+/Users/vitosartori/Developer/puma/ext/puma_http11/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/vitosartori/Developer/puma/ext/puma_http11/cmake-build-debug/CMakeFiles/rebuild_cache.dir

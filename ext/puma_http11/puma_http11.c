@@ -186,13 +186,30 @@ void http_field(puma_parser* hp, const char *field, size_t flen,
   /* check for duplicate header */
   v = rb_hash_aref(hp->request, f);
 
+  /* we don't want to encapsulate the Host header for some different
+   * reasons. Let's try to skip it here.
+   */
+
+  char *headerStr = rb_string_value_cstr(&f);
+  if (rb_errno() != 0) {
+      rb_raise(rb_errinfo(), "Internal error copying header value");
+  }
+
+  printf("da heda is %s\n", headerStr);
+
+  if (strcasecmp(headerStr, "HTTP_HOST") == 0) {
+      printf("da heda ist nicht ary. ist gut %s\n", headerStr);
+    rb_hash_aset(hp->request, f, rb_str_new(value, vlen));
+    return;
+  }
+
   if (v == Qnil) {
-      v = rb_str_new(value, vlen);
-      rb_hash_aset(hp->request, f, v);
+      VALUE header_value = rb_str_new(value, vlen);
+      VALUE new_header = rb_ary_new();
+      rb_ary_push(new_header, header_value);
+      rb_hash_aset(hp->request, f, new_header);
   } else {
-      /* if duplicate header, normalize to comma-separated values */
-      rb_str_cat2(v, ", ");
-      rb_str_cat(v, value, vlen);
+      rb_ary_push(v, rb_str_new(value, vlen));
   }
 }
 

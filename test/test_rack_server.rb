@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "debug"
 require_relative "helper"
 require "net/http"
 
@@ -17,6 +18,7 @@ end
 require "rack/chunked" if Rack.release.start_with? '3.0'
 
 require "nio"
+require "debug"
 
 class TestRackServer < Minitest::Test
   parallelize_me!
@@ -87,7 +89,7 @@ class TestRackServer < Minitest::Test
     hit(["#{@tcp}/test"])
 
     stop
-
+    puts @checker.exception.inspect
     refute @checker.exception, "Checker raised exception"
   end
 

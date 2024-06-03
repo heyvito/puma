@@ -87,7 +87,6 @@ class TestRequestInvalid < Minitest::Test
     te = 'Content-Length: +5'
 
     data = send_http_and_read "#{GET_PREFIX}#{te}\r\n\r\nHello\r\n\r\n"
-
     assert_status data
   end
 

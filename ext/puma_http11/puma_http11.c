@@ -205,8 +205,11 @@ void http_field(puma_parser* hp, const char *field, size_t flen,
   if (headerValue == Qnil) {
       headerValue = rb_ary_new();
   }
-  rb_ary_push(headerValue, rb_str_new(value, vlen));
-  rb_hash_aset(hp->request, hp->verbatim_headers_key, headerValue);
+  printf("\nvalue=%s, vlen=%lu\n", value, vlen);
+  v = rb_str_new(value, vlen);
+  rb_ary_push(headerValue, v);
+  rb_hash_aset(verbatim, f, headerValue);
+  rb_hash_aset(hp->request, hp->verbatim_headers_key, verbatim);
 }
 
 void request_method(puma_parser* hp, const char *at, size_t length)
